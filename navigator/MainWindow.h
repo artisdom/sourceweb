@@ -10,6 +10,7 @@
 
 #include "History.h"
 #include "TextWidthCalculator.h"
+#include "TableReportWindow.h"
 
 namespace Nav {
 
@@ -37,6 +38,7 @@ public:
     History::Location currentLocation();
     void navigateToFile(File *file);
     void navigateToRef(const Ref &ref);
+    void navigateToRef1(const Ref &ref);
 
 private slots:
     void on_actionEditFind_triggered();
@@ -44,8 +46,8 @@ private slots:
     void onFindBarRegexChanged();
     void updateFindBarInfo();
     void on_actionBrowseFiles_triggered();
-    void on_actionBrowseGlobalDefinitions_triggered();
-    void on_actionBrowseSymbols_triggered();
+    TableReportWindow *on_actionBrowseGlobalDefinitions_triggered();
+    TableReportWindow *on_actionBrowseSymbols_triggered();
     void actionBack();
     void actionForward();
     void sourceWidgetFileChanged(File *file);
@@ -63,9 +65,25 @@ private:
     History m_history;
     Ui::MainWindow *ui;
     QSplitter *m_splitter;
+    QSplitter *m_th_splitter;
+    QSplitter *m_bh_splitter;
+    QSplitter *m_th_lv_splitter;
+    QSplitter *m_th_rv_splitter;
+
     FolderWidget *m_folderWidget;
     SourceWidget *m_sourceWidget;
     FindBar *m_findBar;
+
+    FolderWidget *m_folderWidget1;
+    FolderWidget *m_folderWidget2;
+    FolderWidget *m_folderWidget3;
+
+    FolderWidget *m_folderWidget4;
+    FolderWidget *m_folderWidget5;
+
+    TableReportWindow *m_globalDefinitionsWidget;
+    TableReportWindow *m_symbolsWidget;
+    SourceWidget *m_sourceWidget1;
 };
 
 } // namespace Nav

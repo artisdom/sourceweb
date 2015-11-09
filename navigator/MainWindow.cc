@@ -16,6 +16,8 @@
 #include <QSplitter>
 #include <QString>
 #include <QTreeView>
+#include <QListView>
+#include <QTextEdit>
 #include <QVariant>
 #include <QVBoxLayout>
 #include <QWidget>
@@ -53,10 +55,20 @@ MainWindow::MainWindow(Project &project, QWidget *parent) :
 
     // Left pane: folder widget.
     m_folderWidget = new FolderWidget(project.fileManager());
+    m_folderWidget1 = new FolderWidget(project.fileManager());
+    m_folderWidget2 = new FolderWidget(project.fileManager());
+    m_folderWidget3 = new FolderWidget(project.fileManager());
+    m_folderWidget4 = new FolderWidget(project.fileManager());
+    m_folderWidget5 = new FolderWidget(project.fileManager());
+
+    m_globalDefinitionsWidget = on_actionBrowseGlobalDefinitions_triggered();
+    m_symbolsWidget = on_actionBrowseSymbols_triggered();
+    m_sourceWidget1 = new SourceWidget(project);
+    m_sourceWidget1->setFocusPolicy(kDefaultSourceWidgetFocusPolicy);
 
     // Find bar.
     m_findBar = new FindBar;
-    m_findBar->setVisible(false);
+    m_findBar->setVisible(true);
 
     // Right pane: source panel and find box.
     QWidget *sourcePane = new QWidget;
@@ -71,16 +83,38 @@ MainWindow::MainWindow(Project &project, QWidget *parent) :
     }
 
     // Splitter.
-    m_splitter = new QSplitter(Qt::Horizontal);
-    m_splitter->addWidget(m_folderWidget);
-    m_splitter->addWidget(sourcePane);
+    m_splitter = new QSplitter(Qt::Vertical); //the root splitter
+    m_th_splitter = new QSplitter(Qt::Horizontal); //top horizontal splitter, where the main windows is.
+    m_bh_splitter = new QSplitter(Qt::Horizontal); //bottom horizontal splitter. other context-sensitive windows here.
+    m_th_lv_splitter = new QSplitter(Qt::Vertical); //top left vertical splitter, where folder view and symbol windows is.
+    m_th_rv_splitter = new QSplitter(Qt::Vertical); //top right vertical splitter, TBD, can put symbol window and file list here temporarily.
+
+    m_splitter->addWidget(m_th_splitter);
+    m_splitter->addWidget(m_bh_splitter);
+
+    m_th_splitter->addWidget(m_th_lv_splitter);
+    m_th_splitter->addWidget(sourcePane);
+    m_th_splitter->addWidget(m_th_rv_splitter);
+
+    m_th_lv_splitter->addWidget(m_folderWidget);
+    m_th_lv_splitter->addWidget(m_folderWidget1);
+
+    m_th_rv_splitter->addWidget(m_globalDefinitionsWidget);
+    m_th_rv_splitter->addWidget(m_symbolsWidget);
+
+    m_bh_splitter->addWidget(m_sourceWidget1);
+    m_bh_splitter->addWidget(m_folderWidget5);
+    //QSplitter *splitter = new QSplitter(Qt::Horizontal);
+    //m_th_splitter->addWidget(splitter);
+
+    //m_th_splitter->show();
     setCentralWidget(m_splitter);
-    m_splitter->setStretchFactor(0, 0);
-    m_splitter->setStretchFactor(1, 1);
+    m_th_splitter->setStretchFactor(0, 0);
+    m_th_splitter->setStretchFactor(1, 1);
     QList<int> sizes;
     sizes << kDefaultSideBarSizePx;
     sizes << 1;
-    m_splitter->setSizes(sizes);
+    m_th_splitter->setSizes(sizes);
 
     // Tab width menu.
     for (int i = 1; i <= 8; ++i) {
@@ -186,6 +220,21 @@ void MainWindow::navigateToRef(const Ref &ref)
     m_history.recordJump(loc, currentLocation());
 }
 
+void MainWindow::navigateToRef1(const Ref &ref)
+{
+    if (ref.isNull())
+        return;
+    //History::Location loc = currentLocation();
+    //bool forceCenter = m_sourceWidget1->file() != &ref.file();
+    bool forceCenter = true;
+    m_sourceWidget1->setFile(&ref.file());
+    m_sourceWidget1->selectIdentifier(ref.line(),
+                                      ref.column(),
+                                      ref.endColumn(),
+                                      forceCenter);
+    //m_history.recordJump(loc, currentLocation());
+}
+
 void MainWindow::on_actionEditFind_triggered()
 {
     // On Linux, it appears that the first time a QLineEdit receives focus, Qt
@@ -232,7 +281,7 @@ void MainWindow::on_actionBrowseFiles_triggered()
     tw->show();
 }
 
-void MainWindow::on_actionBrowseGlobalDefinitions_triggered()
+TableReportWindow *MainWindow::on_actionBrowseGlobalDefinitions_triggered()
 {
     TableReportWindow *tw = new TableReportWindow;
     ReportDefList *r = new ReportDefList(*theProject, tw);
@@ -240,9 +289,10 @@ void MainWindow::on_actionBrowseGlobalDefinitions_triggered()
     tw->setFilterBoxVisible(true);
     tw->resize(kReportDefListDefaultSize);
     tw->show();
+    return tw;
 }
 
-void MainWindow::on_actionBrowseSymbols_triggered()
+TableReportWindow *MainWindow::on_actionBrowseSymbols_triggered()
 {
     TableReportWindow *tw = new TableReportWindow;
     ReportSymList *r = new ReportSymList(*theProject, tw);
@@ -250,6 +300,7 @@ void MainWindow::on_actionBrowseSymbols_triggered()
     tw->setFilterBoxVisible(true);
     tw->resize(kReportSymListDefaultSize);
     tw->show();
+    return tw;
 }
 
 void MainWindow::actionBack()
@@ -302,11 +353,11 @@ void MainWindow::actionRevealInSideBar()
 {
     File *file = m_sourceWidget->file();
     if (file != NULL) {
-        if (m_splitter->sizes()[0] == 0) {
+        if (m_th_splitter->sizes()[0] == 0) {
             QList<int> sizes;
             sizes << kDefaultSideBarSizePx;
             sizes << 1;
-            m_splitter->setSizes(sizes);
+            m_th_splitter->setSizes(sizes);
         }
         m_folderWidget->ensureItemVisible(file);
     }

@@ -1087,6 +1087,14 @@ void SourceWidgetView::updateSelectionAndHover(QPoint virtualPos)
         setHoverHighlight(word);
         setCursor(word.isEmpty() ? Qt::ArrowCursor : Qt::PointingHandCursor);
         m_selectingAnchor = QPoint();
+
+        if (!word.isEmpty()) {
+            std::set<std::string> symbols = findSymbolsAtRange(word);
+            //if (symbols.size() == 1) {
+                Ref ref = m_project.findSingleDefinitionOfSymbol(symbols.begin()->c_str());
+                theMainWindow->navigateToRef1(ref);
+                //}
+        }
     } else if (m_selectingMode == SM_Ref) {
         setHoverHighlight(FileRange());
         if (!m_selectedRange.isEmpty()) {
