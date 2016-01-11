@@ -1092,7 +1092,13 @@ void SourceWidgetView::updateSelectionAndHover(QPoint virtualPos)
             std::set<std::string> symbols = findSymbolsAtRange(word);
             //if (symbols.size() == 1) {
                 Ref ref = m_project.findSingleDefinitionOfSymbol(symbols.begin()->c_str());
-                theMainWindow->navigateToRef1(ref);
+
+                if (this == theMainWindow->m_sourceWidget->m_view)
+                    theMainWindow->navigateToRef1(ref);
+                else if (this == theMainWindow->m_sourceWidget1->m_view)
+                    theMainWindow->navigateToRef2(ref);
+                //else if (this == theMainWindow->m_sourceWidget2->m_view)
+                //theMainWindow->navigateToRef1(ref);
                 //}
         }
     } else if (m_selectingMode == SM_Ref) {
@@ -1174,7 +1180,13 @@ void SourceWidgetView::mouseReleaseEvent(QMouseEvent *event)
             if (symbols.size() == 1) {
                 Ref ref = m_project.findSingleDefinitionOfSymbol(
                             symbols.begin()->c_str());
-                theMainWindow->navigateToRef(ref);
+                //theMainWindow->navigateToRef(ref);
+                if (this == theMainWindow->m_sourceWidget->m_view)
+                    theMainWindow->navigateToRef(ref);
+                else if (this == theMainWindow->m_sourceWidget1->m_view)
+                    theMainWindow->navigateToRef1(ref);
+                else if (this == theMainWindow->m_sourceWidget2->m_view)
+                    theMainWindow->navigateToRef2(ref);
             }
         }
     }

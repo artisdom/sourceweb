@@ -59,16 +59,18 @@ MainWindow::MainWindow(Project &project, QWidget *parent) :
     m_folderWidget2 = new FolderWidget(project.fileManager());
     m_folderWidget3 = new FolderWidget(project.fileManager());
     m_folderWidget4 = new FolderWidget(project.fileManager());
-    m_folderWidget5 = new FolderWidget(project.fileManager());
+    //m_folderWidget5 = new FolderWidget(project.fileManager());
 
     m_globalDefinitionsWidget = on_actionBrowseGlobalDefinitions_triggered();
     m_symbolsWidget = on_actionBrowseSymbols_triggered();
     m_sourceWidget1 = new SourceWidget(project);
     m_sourceWidget1->setFocusPolicy(kDefaultSourceWidgetFocusPolicy);
+    m_sourceWidget2 = new SourceWidget(project);
+    m_sourceWidget2->setFocusPolicy(kDefaultSourceWidgetFocusPolicy);
 
     // Find bar.
     m_findBar = new FindBar;
-    m_findBar->setVisible(true);
+    m_findBar->setVisible(false);
 
     // Right pane: source panel and find box.
     QWidget *sourcePane = new QWidget;
@@ -103,7 +105,8 @@ MainWindow::MainWindow(Project &project, QWidget *parent) :
     m_th_rv_splitter->addWidget(m_symbolsWidget);
 
     m_bh_splitter->addWidget(m_sourceWidget1);
-    m_bh_splitter->addWidget(m_folderWidget5);
+    m_bh_splitter->addWidget(m_sourceWidget2);
+    //m_bh_splitter->addWidget(m_folderWidget5);
     //QSplitter *splitter = new QSplitter(Qt::Horizontal);
     //m_th_splitter->addWidget(splitter);
 
@@ -229,6 +232,21 @@ void MainWindow::navigateToRef1(const Ref &ref)
     bool forceCenter = true;
     m_sourceWidget1->setFile(&ref.file());
     m_sourceWidget1->selectIdentifier(ref.line(),
+                                      ref.column(),
+                                      ref.endColumn(),
+                                      forceCenter);
+    //m_history.recordJump(loc, currentLocation());
+}
+
+void MainWindow::navigateToRef2(const Ref &ref)
+{
+    if (ref.isNull())
+        return;
+    //History::Location loc = currentLocation();
+    //bool forceCenter = m_sourceWidget1->file() != &ref.file();
+    bool forceCenter = true;
+    m_sourceWidget2->setFile(&ref.file());
+    m_sourceWidget2->selectIdentifier(ref.line(),
                                       ref.column(),
                                       ref.endColumn(),
                                       forceCenter);

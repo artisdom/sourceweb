@@ -39,6 +39,7 @@ public:
     void navigateToFile(File *file);
     void navigateToRef(const Ref &ref);
     void navigateToRef1(const Ref &ref);
+    void navigateToRef2(const Ref &ref);
 
 private slots:
     void on_actionEditFind_triggered();
@@ -71,7 +72,6 @@ private:
     QSplitter *m_th_rv_splitter;
 
     FolderWidget *m_folderWidget;
-    SourceWidget *m_sourceWidget;
     FindBar *m_findBar;
 
     FolderWidget *m_folderWidget1;
@@ -79,11 +79,15 @@ private:
     FolderWidget *m_folderWidget3;
 
     FolderWidget *m_folderWidget4;
-    FolderWidget *m_folderWidget5;
+    //FolderWidget *m_folderWidget5;
 
     TableReportWindow *m_globalDefinitionsWidget;
     TableReportWindow *m_symbolsWidget;
+
+public:
+    SourceWidget *m_sourceWidget;
     SourceWidget *m_sourceWidget1;
+    SourceWidget *m_sourceWidget2;
 };
 
 } // namespace Nav

@@ -373,10 +373,14 @@ public:
     void setFindRegex(const Regex &findRegex, bool advanceToMatch);
     int matchCount();
     int selectedMatchIndex();
+
+    SourceWidgetView *m_view;
+
 public slots:
     void selectNextMatch();
     void selectPreviousMatch();
     void setSelectedMatchIndex(int index);
+
 private:
     int bestMatchIndex(int previousMatchOffset);
     void ensureVisible(QPoint pt, int xMargin = 50, int yMargin = 50);
@@ -384,7 +388,7 @@ private:
 
 private:
     SourceWidgetLineArea *m_lineArea;
-    SourceWidgetView *m_view;
+    //SourceWidgetView *m_view;
     Project &m_project;
 
     // The view origin and top-left file offset when the user began searching.
