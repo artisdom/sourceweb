@@ -221,6 +221,7 @@ void MainWindow::navigateToRef(const Ref &ref)
                                      ref.endColumn(),
                                      forceCenter);
     m_history.recordJump(loc, currentLocation());
+    ui->statusBar->showMessage(tr(ref.fileNameCStr()));
 }
 
 void MainWindow::navigateToRef1(const Ref &ref)
@@ -236,6 +237,7 @@ void MainWindow::navigateToRef1(const Ref &ref)
                                       ref.endColumn(),
                                       forceCenter);
     //m_history.recordJump(loc, currentLocation());
+    ui->statusBar->showMessage(tr(ref.fileNameCStr()));
 }
 
 void MainWindow::navigateToRef2(const Ref &ref)
@@ -251,6 +253,7 @@ void MainWindow::navigateToRef2(const Ref &ref)
                                       ref.endColumn(),
                                       forceCenter);
     //m_history.recordJump(loc, currentLocation());
+    ui->statusBar->showMessage(tr(ref.fileNameCStr()));
 }
 
 void MainWindow::on_actionEditFind_triggered()
