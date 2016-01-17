@@ -16,6 +16,7 @@ kDrivers = [
     "cc", "c++",
     "gcc", "g++",
     "clang", "clang++",
+    "perl",
 ]
 
 kSourceExtensions = [".c", ".cc", ".cpp", ".cxx", ".c++"]
