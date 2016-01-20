@@ -390,7 +390,7 @@ void SourceWidgetLineArea::setViewportOrigin(QPoint pt)
 
 ///////////////////////////////////////////////////////////////////////////////
 // SourceWidgetTextPalette
-
+/*
 SourceWidgetTextPalette::SourceWidgetTextPalette(Project &project) :
     m_project(project)
 {
@@ -413,6 +413,31 @@ SourceWidgetTextPalette::SourceWidgetTextPalette(Project &project) :
     setSymbolTypeColor("Enum", Qt::darkMagenta);
     setSymbolTypeColor("Typedef", Qt::darkMagenta);
     setSymbolTypeColor("Macro", Qt::darkBlue);
+}
+*/
+
+SourceWidgetTextPalette::SourceWidgetTextPalette(Project &project) :
+    m_project(project)
+{
+    m_pens.resize(static_cast<size_t>(Color::specialColorCount));
+    m_pens[static_cast<size_t>(Color::transparent)].setColor(Qt::transparent);
+
+    m_syntaxColor.resize(CXXSyntaxHighlighter::KindMax, Color::defaultText);
+    setSyntaxColor(CXXSyntaxHighlighter::KindComment, QColor("#7F9F7F"));
+    setSyntaxColor(CXXSyntaxHighlighter::KindQuoted, QColor("#CC9393"));
+    setSyntaxColor(CXXSyntaxHighlighter::KindNumber, QColor("#8ACCCF"));
+    setSyntaxColor(CXXSyntaxHighlighter::KindDirective, QColor("#94BFF3"));
+    setSyntaxColor(CXXSyntaxHighlighter::KindKeyword, QColor("#F0DFAF"));
+
+    setSymbolTypeColor("GlobalVariable", QColor("#93E0E3"));
+    setSymbolTypeColor("Field", QColor("#DFAF8F"));
+    setSymbolTypeColor("Namespace", QColor("#7CB8BB"));
+    setSymbolTypeColor("Struct", QColor("#7CB8BB"));
+    setSymbolTypeColor("Class", QColor("#7CB8BB"));
+    setSymbolTypeColor("Union", QColor("#7CB8BB"));
+    setSymbolTypeColor("Enum", QColor("#7CB8BB"));
+    setSymbolTypeColor("Typedef", QColor("#7CB8BB"));
+    setSymbolTypeColor("Macro", QColor("#DFAF8F"));
 }
 
 void SourceWidgetTextPalette::setDefaultTextColor(const QColor &color)
@@ -503,6 +528,13 @@ SourceWidgetView::SourceWidgetView(
     setMouseTracking(true);
     setAttribute(Qt::WA_Hover);
     updateFindMatches();
+    //setPalette( QPalette( Qt::blue ) );
+    //this->setPalette(this->palette().setColor(this->backgroundRole(), Qt::blue));
+    QPalette p = this->palette();
+    //p.setColor(this->backgroundRole(), Qt::blue);
+    p.setColor(this->backgroundRole(), QColor("#404040"));
+    p.setColor(this->foregroundRole(), QColor("#F6F3E8"));
+    this->setPalette(p);
 }
 
 // Declare out-of-line destructor where member std::unique_ptr's types are
